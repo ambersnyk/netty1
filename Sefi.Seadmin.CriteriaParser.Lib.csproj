@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Description>SEAdmin Criteria Parser</Description>
+    <Title>SEAdmin Criteria Parser</Title>
+    <Company>StoneEagle F&amp;I</Company>
+    <Authors>StoneEagle F&amp;I</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="CriteriaRule.g4" />
+    <None Remove="CriteriaXMLRule.g4" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+    <PackageReference Include="Antlr4BuildTasks" Version="12.8.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Antlr4 Include="CriteriaRule.g4">
+      <Package>Sefi.Seadmin.CriteriaParser</Package>
+      <GAtn>false</GAtn>
+      <Listener>false</Listener>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Antlr4>
+    <Antlr4 Include="CriteriaXMLRule.g4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Package>Sefi.Seadmin.CriteriaParser</Package>
+    </Antlr4>
+  </ItemGroup>
+
+  <Target Name="ModifyAccessModifier" AfterTargets="Antlr4CompileAddFilesGenerated" Condition="'$(SnykTest)' != 'true'">
+    <Exec Command="$([MSBuild]::IsOSPlatform('Windows'))" Command="powershell.exe -ExecutionPolicy Unrestricted -NonInteractive -File &quot;$(MSBuildProjectDirectory)/build/MakeClassesAndInterfacesInternal.ps1&quot; $(ProjectDir)$(IntermediateOutputPath) " />
+    <Exec Command="$([MSBuild]::IsOSPlatform('Linux'))" Command="chmod +x $(MSBuildProjectDirectory)/build/MakeClassesAndInterfacesInternal.sh &amp;&amp; bash $(MSBuildProjectDirectory)/build/MakeClassesAndInterfacesInternal.sh $(ProjectDir)$(IntermediateOutputPath)" />
+  </Target>
+</Project>
