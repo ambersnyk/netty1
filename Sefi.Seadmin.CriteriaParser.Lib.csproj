@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <Target Name="ModifyAccessModifier" AfterTargets="Antlr4CompileAddFilesGenerated" Condition="'$(SnykTest)' != 'true'">
-    <Exec Command="$([MSBuild]::IsOSPlatform('Windows'))" Command="powershell.exe -ExecutionPolicy Unrestricted -NonInteractive -File &quot;$(MSBuildProjectDirectory)/build/MakeClassesAndInterfacesInternal.ps1&quot; $(ProjectDir)$(IntermediateOutputPath) " />
-    <Exec Command="$([MSBuild]::IsOSPlatform('Linux'))" Command="chmod +x $(MSBuildProjectDirectory)/build/MakeClassesAndInterfacesInternal.sh &amp;&amp; bash $(MSBuildProjectDirectory)/build/MakeClassesAndInterfacesInternal.sh $(ProjectDir)$(IntermediateOutputPath)" />
+       <Exec Command="<dotnet-swagger-command>" />
   </Target>
 </Project>
